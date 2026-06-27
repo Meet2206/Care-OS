@@ -4,7 +4,6 @@
 
 > Revolutionizing healthcare administration with intelligent automation and seamless patient management.
 
----
 
 ## 📋 Table of Contents
 
