@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --shell: #f6f1e8;
+        --panel: rgba(35, 148, 123, 0.92);
+        --panel-muted: #f5f2eb;
+        --line: #e6ddd1;
+        --ink: #2d3238;
+        --muted: #6e746f;
+        --primary-blue: #3f78c8;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        font-family: "Inter", sans-serif;
+        background: var(--shell);
+    }
+
+    body {
+        margin: 0;
+        min-width: 320px;
+        background:
+            radial-gradient(circle at top left, rgba(193, 234, 219, 0.5), transparent 24%),
+            radial-gradient(circle at top right, rgba(174, 213, 242, 0.45), transparent 22%),
+            linear-gradient(180deg, #f7f1e7 0%, #f2f0eb 100%);
+        color: var(--ink);
+    }
+
+    body,
+    button,
+    input {
+        font-family: "Inter", sans-serif;
+    }
+
+    #root {
+        min-height: 100vh;
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: "Newsreader", serif;
+    }
+}
