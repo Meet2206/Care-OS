@@ -27,11 +27,11 @@
 ### 🏥 Comprehensive Hospital Management
 ![Hospital Management](https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif)
 
-- **Patient Records Management** - Centralized digital patient profiles
-- **Appointment Scheduling** - AI-powered smart scheduling system
-- **Staff Management** - Efficient workforce coordination
-- **Department Organization** - Streamlined departmental operations
-- **Medical History Tracking** - Comprehensive health documentation
+**Patient Records Management** - Centralized digital patient profiles
+**Appointment Scheduling** - AI-powered smart scheduling system
+**Staff Management** - Efficient workforce coordination
+**Department Organization** - Streamlined departmental operations
+**Medical History Tracking** - Comprehensive health documentation
 
 ### 🤖 AI Intelligence
 ![AI Processing](https://media.giphy.com/media/xT9IgEx8SbYxQVSYX2/giphy.gif)
