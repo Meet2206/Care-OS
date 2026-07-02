@@ -100,8 +100,16 @@ function createBookingTicket(form) {
     }
 }
 
-function getPaymentValidationMessage(form) {
+function getPaymentValidationMessage(form, qrPaid = false) {
+    if (!form.date || !form.doctor || !form.time) {
+        return "Choose a date, doctor, and available time slot before payment."
+    }
+
     if (form.paymentMethod === "upi") {
+        if (qrPaid) {
+            return ""
+        }
+
         return form.upiId.trim() ? "" : "Enter a valid UPI ID to continue."
     }
 
@@ -133,6 +141,8 @@ function PatientDashboard() {
     const [showBookingModal, setShowBookingModal] = useState(false)
     const [selectedSupport, setSelectedSupport] = useState("")
     const [bookingTicket, setBookingTicket] = useState(null)
+    const [paymentError, setPaymentError] = useState("")
+    const [selectedAppointment, setSelectedAppointment] = useState(null)
     const [useQrPayment, setUseQrPayment] = useState(false)
     const [bookingForm, setBookingForm] = useState({
         date: "",
@@ -154,6 +164,7 @@ function PatientDashboard() {
             ...current,
             [key]: value,
         }))
+        setPaymentError("")
     }
 
     const handleDoctorCardSelect = (doctor) => {
@@ -167,9 +178,10 @@ function PatientDashboard() {
 
     const handleBookingSubmit = (event) => {
         event.preventDefault()
-        const paymentValidationMessage = getPaymentValidationMessage(bookingForm)
+        const paymentValidationMessage = getPaymentValidationMessage(bookingForm, useQrPayment)
 
         if (paymentValidationMessage) {
+            setPaymentError(paymentValidationMessage)
             return
         }
 
@@ -204,9 +216,10 @@ function PatientDashboard() {
         setShowBookingModal(false)
         setBookingTicket(ticket)
         setUseQrPayment(false)
+        setPaymentError("")
     }
 
-    const paymentValidationMessage = bookingForm.time ? getPaymentValidationMessage(bookingForm) : ""
+    const paymentValidationMessage = getPaymentValidationMessage(bookingForm, useQrPayment)
 
     const downloadTicket = () => {
         if (!bookingTicket) {
@@ -331,11 +344,11 @@ function PatientDashboard() {
 
                 <div className="grid gap-4 xl:grid-cols-[1.4fr_0.8fr]">
                     <Card className="p-6">
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <h2 className="font-display text-3xl text-[var(--ink)]">My Upcoming Appointments</h2>
                             <Button variant="subtle" onClick={() => setShowBookingModal(true)}>New Booking</Button>
                         </div>
-                        <div className="mt-5 overflow-hidden rounded-[24px] border border-[var(--line)]">
+                        <div className="responsive-table scroll-table mt-5 rounded-[24px] border border-[var(--line)]">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-[var(--panel-muted)] text-[var(--muted)]">
                                     <tr>
@@ -345,20 +358,26 @@ function PatientDashboard() {
                                         <th className="px-4 py-3 font-semibold">Specialty</th>
                                         <th className="px-4 py-3 font-semibold">Location</th>
                                         <th className="px-4 py-3 font-semibold">Status</th>
+                                        <th className="px-4 py-3 font-semibold">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {appointments.map((appointment) => (
                                         <tr key={`${appointment.date}-${appointment.time}-${appointment.doctor}`} className="border-t border-[var(--line)] text-[var(--ink)]">
-                                            <td className="px-4 py-4">{appointment.date}</td>
-                                            <td className="px-4 py-4">{appointment.time}</td>
-                                            <td className="px-4 py-4">{appointment.doctor}</td>
-                                            <td className="px-4 py-4 text-[var(--muted)]">{appointment.specialty}</td>
-                                            <td className="px-4 py-4 text-[var(--muted)]">{appointment.location}</td>
-                                            <td className="px-4 py-4">
+                                            <td data-label="Date" className="px-4 py-4">{appointment.date}</td>
+                                            <td data-label="Time" className="px-4 py-4">{appointment.time}</td>
+                                            <td data-label="Doctor" className="px-4 py-4">{appointment.doctor}</td>
+                                            <td data-label="Specialty" className="px-4 py-4 text-[var(--muted)]">{appointment.specialty}</td>
+                                            <td data-label="Location" className="px-4 py-4 text-[var(--muted)]">{appointment.location}</td>
+                                            <td data-label="Status" className="px-4 py-4">
                                                 <StatusPill tone={appointment.status === "Scheduled" ? "green" : appointment.status === "Requested" ? "blue" : "amber"}>
                                                     {appointment.status}
                                                 </StatusPill>
+                                            </td>
+                                            <td data-label="Action" className="px-4 py-4">
+                                                <Button variant="subtle" className="px-4 py-2" onClick={() => setSelectedAppointment(appointment)}>
+                                                    View
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))}
@@ -389,7 +408,7 @@ function PatientDashboard() {
                 <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
                     <Card className="p-6">
                         <h2 className="font-display text-3xl text-[var(--ink)]">Recent Medical Records</h2>
-                        <div className="mt-5 overflow-hidden rounded-[24px] border border-[var(--line)]">
+                        <div className="responsive-table scroll-table mt-5 rounded-[24px] border border-[var(--line)]">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-[var(--panel-muted)] text-[var(--muted)]">
                                     <tr>
@@ -402,10 +421,10 @@ function PatientDashboard() {
                                 <tbody>
                                     {medicalRecords.map((record) => (
                                         <tr key={record.id} className="border-t border-[var(--line)] text-[var(--ink)]">
-                                            <td className="px-4 py-4">{record.date}</td>
-                                            <td className="px-4 py-4">{record.type}</td>
-                                            <td className="px-4 py-4">{record.doctorFull}</td>
-                                            <td className="px-4 py-4 text-[var(--muted)]">{record.summary}</td>
+                                            <td data-label="Date" className="px-4 py-4">{record.date}</td>
+                                            <td data-label="Record Type" className="px-4 py-4">{record.type}</td>
+                                            <td data-label="Doctor" className="px-4 py-4">{record.doctorFull}</td>
+                                            <td data-label="Summary" className="px-4 py-4 text-[var(--muted)]">{record.summary}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -693,8 +712,8 @@ function PatientDashboard() {
                                         </div>
                                     ) : null}
 
-                                    {paymentValidationMessage ? (
-                                        <p className="mt-3 text-sm text-[#9a5a53]">{paymentValidationMessage}</p>
+                                    {bookingForm.time && (paymentValidationMessage || paymentError) ? (
+                                        <p className="mt-3 text-sm text-[#9a5a53]">{paymentValidationMessage || paymentError}</p>
                                     ) : null}
                                 </div>
                             </div>
@@ -728,13 +747,41 @@ function PatientDashboard() {
                         <div className="flex justify-end">
                             <Button
                                 type="submit"
-                                className={`px-6 ${paymentValidationMessage ? "opacity-60" : ""}`}
+                                className="px-6"
                                 disabled={Boolean(paymentValidationMessage)}
                             >
                                 Pay Advance & Confirm
                             </Button>
                         </div>
                     </form>
+                </div>
+            </Modal>
+
+            <Modal
+                open={Boolean(selectedAppointment)}
+                onClose={() => setSelectedAppointment(null)}
+                title="Appointment Details"
+                eyebrow="Patient Appointment"
+            >
+                <div className="space-y-4">
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        {[
+                            ["Date", selectedAppointment?.date],
+                            ["Time", selectedAppointment?.time],
+                            ["Doctor", selectedAppointment?.doctor],
+                            ["Specialty", selectedAppointment?.specialty],
+                            ["Location", selectedAppointment?.location],
+                            ["Status", selectedAppointment?.status],
+                        ].map(([label, value]) => (
+                            <div key={label} className="rounded-2xl bg-[var(--panel-muted)] px-4 py-4">
+                                <p className="text-xs uppercase tracking-[0.16em]">{label}</p>
+                                <p className="mt-2 font-semibold text-[var(--ink)]">{value}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex justify-end">
+                        <Button variant="subtle" onClick={() => setSelectedAppointment(null)}>Close</Button>
+                    </div>
                 </div>
             </Modal>
 

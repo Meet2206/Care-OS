@@ -8,7 +8,7 @@ function PrescriptionOrdersPanel({ orders }) {
             <div className="mt-5 space-y-4">
                 {orders.map((order) => (
                     <div key={order.id} className="rounded-2xl bg-[var(--panel-muted)] px-4 py-4">
-                        <div className="flex items-center justify-between gap-3">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <p className="font-semibold text-[var(--ink)]">{order.medicine}</p>
                                 <p className="mt-1 text-sm text-[var(--muted)]">{order.id} • {order.quantity} • {order.mode}</p>

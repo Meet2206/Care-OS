@@ -11,7 +11,7 @@ const titles = {
     "/ai": "CareAI",
 }
 
-function Topbar() {
+function Topbar({ onMenuClick }) {
     const location = useLocation()
     const { user, logout } = useAuth()
     const [showAlerts, setShowAlerts] = useState(false)
@@ -42,15 +42,29 @@ function Topbar() {
     ]
 
     return (
-        <header className="relative flex min-h-[76px] items-center justify-between rounded-[30px] border border-white/70 bg-white/88 px-6 shadow-[0_12px_30px_rgba(28,46,74,0.06)]">
-            <div>
+        <header className="relative flex min-h-[76px] flex-col gap-4 rounded-[24px] border border-white/70 bg-white/88 px-4 py-4 shadow-[0_12px_30px_rgba(28,46,74,0.06)] sm:rounded-[30px] sm:px-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+                <button
+                    type="button"
+                    onClick={onMenuClick}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--panel-muted)] text-[var(--muted)] lg:hidden"
+                    aria-label="Open navigation"
+                >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M4 7h16" />
+                        <path d="M4 12h16" />
+                        <path d="M4 17h16" />
+                    </svg>
+                </button>
+                <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">Shared Login Page</p>
-                <h1 className="mt-2 font-display text-[30px] leading-none text-[var(--ink)]">
+                <h1 className="mt-2 truncate font-display text-[26px] leading-none text-[var(--ink)] sm:text-[30px]">
                     {titles[location.pathname] ?? "CareOS"}
                 </h1>
+                </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-end">
                 <button
                     ref={buttonRef}
                     type="button"
@@ -65,22 +79,22 @@ function Topbar() {
                     </svg>
                 </button>
 
-                <div className="flex items-center gap-3 rounded-full border border-[var(--line)] bg-[var(--panel-muted)] px-3 py-2">
+                <div className="flex min-w-0 items-center gap-3 rounded-full border border-[var(--line)] bg-[var(--panel-muted)] px-3 py-2">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#c7def5_0%,#e4f3e5_100%)] text-sm font-semibold text-[var(--ink)]">
                         {user?.name?.split(" ").map((part) => part[0]).slice(0, 2).join("")}
                     </div>
-                    <div>
-                        <p className="text-sm font-semibold text-[var(--ink)]">{user?.name}</p>
-                        <p className="text-xs text-[var(--muted)]">{user?.title}</p>
+                    <div className="hidden min-w-0 sm:block">
+                        <p className="truncate text-sm font-semibold text-[var(--ink)]">{user?.name}</p>
+                        <p className="truncate text-xs text-[var(--muted)]">{user?.title}</p>
                     </div>
-                    <button type="button" onClick={logout} className="pl-4 text-sm font-semibold text-[var(--muted)]">
+                    <button type="button" onClick={logout} className="text-sm font-semibold text-[var(--muted)] sm:pl-4">
                         Logout
                     </button>
                 </div>
             </div>
 
             {showAlerts ? (
-                <div ref={panelRef} className="absolute right-6 top-[88px] z-20 w-[340px] rounded-[24px] border border-white/80 bg-white/96 p-4 shadow-[0_18px_50px_rgba(28,46,74,0.14)]">
+                <div ref={panelRef} className="absolute right-4 top-[calc(100%+0.75rem)] z-20 w-[min(340px,calc(100vw-2rem))] rounded-[24px] border border-white/80 bg-white/96 p-4 shadow-[0_18px_50px_rgba(28,46,74,0.14)] sm:right-6">
                     <div className="flex items-center justify-between">
                         <p className="font-display text-2xl text-[var(--ink)]">Alerts</p>
                         <button type="button" onClick={() => setShowAlerts(false)} className="text-sm font-semibold text-[var(--muted)]">

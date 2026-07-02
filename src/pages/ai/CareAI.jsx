@@ -258,12 +258,12 @@ function CareAI() {
                 </Card>
             ) : null}
 
-            <Card className="flex min-h-[620px] flex-col p-6">
+            <Card className="flex min-h-[560px] flex-col p-4 sm:min-h-[620px] sm:p-6">
                 <div className="flex-1 space-y-4 overflow-y-auto rounded-[28px] bg-[linear-gradient(180deg,#f7fbfd_0%,#eef7f1_100%)] p-5">
                     {messages.map((message) => (
                         <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
                             <div
-                                className={`max-w-[72%] rounded-[24px] px-4 py-3 text-sm leading-7 shadow-sm ${
+                                className={`text-wrap-anywhere max-w-[88%] rounded-[24px] px-4 py-3 text-sm leading-7 shadow-sm sm:max-w-[72%] ${
                                     message.sender === "user"
                                         ? "bg-[linear-gradient(135deg,#4d86d1_0%,#2768bb_100%)] text-white"
                                         : "bg-white text-[var(--ink)]"
@@ -374,7 +374,7 @@ function CareAI() {
                                 Search by patient name or unique ID to pull up a quick clinical summary.
                             </p>
 
-                            <form onSubmit={handleDoctorFinder} className="mt-5 flex gap-3">
+                            <form onSubmit={handleDoctorFinder} className="mt-5 flex flex-col gap-3 sm:flex-row">
                                 <input
                                     value={finderQuery}
                                     onChange={(event) => setFinderQuery(event.target.value)}
@@ -426,12 +426,12 @@ function CareAI() {
                         </Card>
                     ) : null}
 
-                    <form onSubmit={handleSend} className="flex gap-3 rounded-full border border-[var(--line)] bg-[var(--panel-muted)] p-2">
+                    <form onSubmit={handleSend} className="flex flex-col gap-3 rounded-[24px] border border-[var(--line)] bg-[var(--panel-muted)] p-2 sm:flex-row sm:rounded-full">
                         <input
                             value={draft}
                             onChange={(event) => setDraft(event.target.value)}
                             placeholder={isDoctor ? "Ask Mitra for a follow-up note..." : "Ask Mitra a follow-up question..."}
-                            className="flex-1 rounded-full bg-transparent px-4 text-sm text-[var(--ink)] outline-none"
+                            className="min-h-10 flex-1 rounded-full bg-transparent px-4 text-sm text-[var(--ink)] outline-none"
                         />
                         <Button type="submit" className="px-6">Send</Button>
                     </form>

@@ -4,7 +4,7 @@ import StatusPill from "../../common/StatusPill"
 function AssistancePanel({ options, selectedOption, onSelect }) {
     return (
         <Card className="p-6">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 className="font-display text-3xl text-[var(--ink)]">Visit Assistance</h2>
                     <p className="mt-2 text-sm leading-7 text-[var(--muted)]">

@@ -40,7 +40,7 @@ const icons = {
     ),
 }
 
-function Sidebar() {
+function Sidebar({ open = false, onClose }) {
     const { user } = useAuth()
 
     const itemsByRole = {
@@ -68,23 +68,43 @@ function Sidebar() {
     const items = itemsByRole[user?.role] ?? [{ label: "Dashboard", to: user?.dashboardPath ?? "/login" }]
 
     return (
-        <aside className="relative min-h-screen w-[272px] rounded-r-[36px] border-r border-white/70 bg-[linear-gradient(180deg,#effaf5_0%,#eaf4fb_100%)] px-5 py-7">
+        <>
+            {open ? (
+                <button
+                    type="button"
+                    aria-label="Close navigation overlay"
+                    className="fixed inset-0 z-30 bg-[rgba(15,23,42,0.28)] lg:hidden"
+                    onClick={onClose}
+                />
+            ) : null}
+            <aside className={`fixed inset-y-0 left-0 z-40 w-[280px] max-w-[86vw] overflow-y-auto rounded-r-[30px] border-r border-white/70 bg-[linear-gradient(180deg,#effaf5_0%,#eaf4fb_100%)] px-5 py-6 shadow-[0_20px_60px_rgba(23,41,63,0.18)] transition-transform duration-200 lg:sticky lg:top-4 lg:z-auto lg:max-h-[calc(100vh-2rem)] lg:w-[272px] lg:translate-x-0 lg:rounded-r-[36px] lg:shadow-none ${open ? "translate-x-0" : "-translate-x-full"}`}>
+            <div className="flex items-start justify-between gap-3">
             <NavLink
                 to={user?.dashboardPath ?? "/login"}
                 className="flex items-center gap-3 rounded-[28px] px-3 py-2 transition-colors hover:bg-white/50"
+                onClick={onClose}
             >
                 <img
                     src={careOsLogo}
                     alt="CareOS"
-                    className="h-30 w-auto rounded-[20px] object-contain"
+                    className="h-24 w-auto rounded-[20px] object-contain"
                 />
             </NavLink>
+                <button
+                    type="button"
+                    className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-sm font-semibold text-[var(--muted)] lg:hidden"
+                    onClick={onClose}
+                >
+                    Close
+                </button>
+            </div>
 
             <nav className="mt-10 space-y-2">
                 {items.map((item) => (
                     <NavLink
                         key={item.label}
                         to={item.to}
+                        onClick={onClose}
                         className={({ isActive }) =>
                             `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold ${
                                 isActive
@@ -112,6 +132,7 @@ function Sidebar() {
                 </p>
             </div>
         </aside>
+        </>
     )
 }
 

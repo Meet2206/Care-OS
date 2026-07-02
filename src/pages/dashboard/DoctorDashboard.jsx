@@ -203,7 +203,7 @@ function DoctorDashboard() {
                 <div ref={appointmentsRef} className="grid gap-4 xl:grid-cols-[1.45fr_0.95fr]">
                     <Card className="p-6">
                         <h2 className="font-display text-3xl text-[var(--ink)]">Today&apos;s Appointments</h2>
-                        <div className="mt-5 overflow-hidden rounded-[24px] border border-[var(--line)]">
+                        <div className="responsive-table scroll-table mt-5 rounded-[24px] border border-[var(--line)]">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-[var(--panel-muted)] text-[var(--muted)]">
                                     <tr>
@@ -216,10 +216,10 @@ function DoctorDashboard() {
                                 <tbody>
                                     {doctorSchedule.map((row) => (
                                         <tr key={`${row.time}-${row.patient}`} className="border-t border-[var(--line)] text-[var(--ink)]">
-                                            <td className="px-4 py-4">{row.time}</td>
-                                            <td className="px-4 py-4">{row.patient}</td>
-                                            <td className="px-4 py-4 text-[var(--muted)]">{row.reason}</td>
-                                            <td className="px-4 py-4">
+                                            <td data-label="Time" className="px-4 py-4">{row.time}</td>
+                                            <td data-label="Patient" className="px-4 py-4">{row.patient}</td>
+                                            <td data-label="Reason" className="px-4 py-4 text-[var(--muted)]">{row.reason}</td>
+                                            <td data-label="Status" className="px-4 py-4">
                                                 <StatusPill tone={statusTone(row.status)}>{row.status}</StatusPill>
                                             </td>
                                         </tr>
@@ -263,7 +263,7 @@ function DoctorDashboard() {
                         />
                     </div>
 
-                    <div className="mt-5 overflow-hidden rounded-[24px] border border-[var(--line)]">
+                    <div className="responsive-table scroll-table mt-5 rounded-[24px] border border-[var(--line)]">
                         <table className="w-full text-left text-sm">
                             <thead className="bg-[var(--panel-muted)] text-[var(--muted)]">
                                 <tr>
@@ -276,10 +276,10 @@ function DoctorDashboard() {
                             <tbody>
                                 {filteredPatients.map((patient) => (
                                     <tr key={patient.id} className="border-t border-[var(--line)] text-[var(--ink)]">
-                                        <td className="px-4 py-4">{patient.id}</td>
-                                        <td className="px-4 py-4">{patient.name}</td>
-                                        <td className="px-4 py-4 text-[var(--muted)]">{patient.ward}</td>
-                                        <td className="px-4 py-4">
+                                        <td data-label="Patient ID" className="px-4 py-4">{patient.id}</td>
+                                        <td data-label="Name" className="px-4 py-4">{patient.name}</td>
+                                        <td data-label="Ward / Room" className="px-4 py-4 text-[var(--muted)]">{patient.ward}</td>
+                                        <td data-label="Action" className="px-4 py-4">
                                             <Button variant="subtle" className="px-4 py-2" onClick={() => openReview(patient)}>
                                                 Review
                                             </Button>
@@ -477,7 +477,7 @@ function DoctorDashboard() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3">
+                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                         <Button type="button" variant="subtle" onClick={closeReview}>Cancel</Button>
                         <Button
                             type="button"

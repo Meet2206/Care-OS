@@ -53,7 +53,7 @@ function BookingCalendar({ value, onChange }) {
     }
 
     return (
-        <div className="rounded-[24px] border border-[var(--line)] bg-white p-4">
+        <div className="rounded-[24px] border border-[var(--line)] bg-white p-3 sm:p-4">
             <div className="flex items-center justify-between gap-3">
                 <button
                     type="button"
@@ -72,13 +72,13 @@ function BookingCalendar({ value, onChange }) {
                 </button>
             </div>
 
-            <div className="mt-4 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.08em] text-[var(--muted)]">
+            <div className="mt-4 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--muted)] sm:gap-2 sm:text-xs">
                 {weekDays.map((day) => (
                     <div key={day}>{day}</div>
                 ))}
             </div>
 
-            <div className="mt-3 grid grid-cols-7 gap-2">
+            <div className="mt-3 grid grid-cols-7 gap-1 sm:gap-2">
                 {days.map((day, index) => {
                     if (!day) {
                         return <div key={`empty-${index}`} className="h-10" />
@@ -95,7 +95,7 @@ function BookingCalendar({ value, onChange }) {
                             type="button"
                             disabled={disabled}
                             onClick={() => onChange(toDateString(day))}
-                            className={`h-10 rounded-2xl text-sm font-medium ${
+                            className={`h-9 rounded-xl text-sm font-medium sm:h-10 sm:rounded-2xl ${
                                 disabled
                                     ? "cursor-not-allowed bg-[rgba(245,241,235,0.72)] text-[rgba(110,116,111,0.45)]"
                                     : selected

@@ -3,6 +3,7 @@ import { createContext, useContext, useMemo, useState } from "react"
 import { roleOptions } from "../data/mockData"
 
 const AuthContext = createContext(null)
+const AUTH_STORAGE_KEY = "careos-demo-user"
 
 const roleByEmail = Object.values(roleOptions).reduce((accumulator, role) => {
     accumulator[role.email] = role
@@ -10,7 +11,30 @@ const roleByEmail = Object.values(roleOptions).reduce((accumulator, role) => {
 }, {})
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(() => {
+        if (typeof window === "undefined") {
+            return null
+        }
+
+        try {
+            const stored = window.localStorage.getItem(AUTH_STORAGE_KEY)
+            return stored ? JSON.parse(stored) : null
+        } catch {
+            return null
+        }
+    })
+
+    const persistUser = (nextUser) => {
+        setUser(nextUser)
+
+        if (typeof window !== "undefined") {
+            if (nextUser) {
+                window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser))
+            } else {
+                window.localStorage.removeItem(AUTH_STORAGE_KEY)
+            }
+        }
+    }
 
     const value = useMemo(() => ({
         user,
@@ -18,7 +42,7 @@ export function AuthProvider({ children }) {
             const match = roleByEmail[email.trim().toLowerCase()]
 
             if (!match) {
-                return { ok: false, message: "Use admin@careos.com, doctor@careos.com, or patient@careos.com." }
+                return { ok: false, message: "Use admin@careos.com, doctor@careos.com, patient@careos.com, or pharmacy@careos.com." }
             }
 
             const nextUser = {
@@ -29,10 +53,10 @@ export function AuthProvider({ children }) {
                 dashboardPath: match.dashboardPath,
             }
 
-            setUser(nextUser)
+            persistUser(nextUser)
             return { ok: true, user: nextUser }
         },
-        logout: () => setUser(null),
+        logout: () => persistUser(null),
     }), [user])
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
